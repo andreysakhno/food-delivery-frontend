@@ -1,0 +1,38 @@
+%ic {
+   font-family: "icons";
+   font-style: normal;
+   font-weight: normal;
+   font-variant: normal;
+   text-transform: none;
+   line-height: 1;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+}
+
+[class*="_icon-"] {
+   &:before {
+      @extend %ic;
+      display: block;
+   }
+}
+
+._icon-icon-no-photo:before {
+   content: "\e908";
+   color: #808080;
+}
+
+._icon-close:before {
+   content: "\e903";
+}
+
+._icon-cart:before {
+   content: "\e93a";
+}
+
+._icon-equalizer:before {
+   content: "\e992";
+}
+
+._icon-filter:before {
+   content: "\ea5b";
+}

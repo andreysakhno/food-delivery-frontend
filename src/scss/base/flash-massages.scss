@@ -1,0 +1,125 @@
+* {
+   padding: 0px;
+   margin: 0px;
+   border: 0px;
+}
+
+*,
+*:before,
+*:after {
+   box-sizing: border-box;
+   font-family: Arial, sans-serif;
+}
+
+.flash-messages {
+   position: fixed;
+   z-index: 5;
+   top: 0;
+   right: 0;
+   padding: 1rem;
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+}
+
+.flash-messages__message {
+   padding: 0.75rem;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   column-gap: 0.8rem;
+   min-height: 2.5rem;
+   width: 100%;
+   border-radius: 8px;
+   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+   opacity: 0;
+   visibility: hidden;
+   transition: opacity 2s ease 0s;
+   color: #ffffff;
+}
+
+.flash-messages__message:not(:last-child) {
+   margin-bottom: 1rem;
+}
+
+.flash-messages__message.error {
+   background-color: red;
+}
+
+.flash-messages__message.success {
+   background-color: green;
+}
+
+.flash-messages__message.info {
+   background-color: dodgerblue;
+}
+
+.flash-messages__message.warning {
+   background-color: gold;
+   color: black;
+}
+
+.flash-messages__message.fadeout {
+   opacity: 0;
+   visibility: hidden;
+}
+
+.flash-messages__message.fadein {
+   opacity: 1;
+   visibility: visible;
+}
+
+.flash-messages__text {
+   font-size: 1.05rem;
+}
+
+.flash-messages__close {
+   position: relative;
+   flex: 0 0 18px;
+   height: 18px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   cursor: pointer;
+   background: transparent;
+   transition: transform 0.1s ease 0s;
+}
+
+.flash-messages__close:before,
+.flash-messages__close:after {
+   content: "";
+   position: absolute;
+   width: 100%;
+   height: 2px;
+   background: #ffffff;
+}
+
+.flash-messages__close:before {
+   transform: rotate(45deg);
+}
+
+.flash-messages__close:after {
+   transform: rotate(-45deg);
+}
+
+.flash-messages__close:hover {
+   transform: scale(0.8)
+}
+
+@media (min-width: 479.98px) {
+   .flash-messages {
+      width: 50%;
+   }
+}
+
+@media (min-width: 991.98px) {
+   .flash-messages {
+      width: 33.3333%;
+   }
+}
+
+@media (min-width: 1400px) {
+   .flash-messages {
+      width: 25%;
+   }
+}

@@ -1,0 +1,311 @@
+
+
+// Заголовки, загальні БЕМ блоки та інше...
+.shop {
+   // .shop__top
+   &__top {}
+}
+
+.shop-top {
+   // .shop-top__container
+   &__container { 
+      @include adaptiveValue("padding-top", 30, 20);
+      @include adaptiveValue("padding-bottom", 30, 20);
+   }
+   // .shop-top__title
+   &__title {
+      font-weight: 700;
+      @include adaptiveValue("font-size", 28, 22);
+      line-height: math.div(28, 24);
+   }
+}
+
+//========================================================================================================================================================
+
+.primary-btn {
+   appearance: none;
+   background-color: transparent;
+   border: 2px solid $accentColorBlue;
+   border-radius: rem(30);
+   line-height: 1;
+   padding: rem(12) rem(23);
+   text-align: center;
+   border-color: $accentColorRed;
+   background: linear-gradient(45deg, $accentColorRed 50%, transparent 50%) 100% / 400%;
+   transition: background 0.5s ease-in-out 0s, color 0.3s ease 0s;
+
+   @media (any-hover: hover) {
+      &:hover {
+         color: #fff;
+         outline: 0;
+         background-position: 0;
+      }
+   }
+}
+
+//========================================================================================================================================================
+
+.primary-card-gorizontal {
+   display: flex;
+   @include adaptiveValue("gap", 20, 15);
+   overflow: hidden;
+   background-color: $bgColorGrey;
+   
+   &:not(:last-child) {
+      @include adaptiveValue("margin-bottom", 25, 15);
+   }
+
+   @media (max-width:$mobileSmall) {
+     flex-direction: column;
+   }
+
+   @media (any-hover: hover) {
+      &:hover {        
+         &.objects-card {
+            background-color: $bgColorGrey;
+         }
+         .primary-card-gorizontal__image-ibg img {
+            transform: scale(1.05);
+         }
+      }
+   }
+
+   // .primary-card-gorizontal__image-ibg
+   &__image-ibg {
+      border-radius: rem(10);
+      overflow: hidden;
+      align-self: flex-start;
+      padding-left: rem(100);
+      padding-top: rem(100);
+
+      @media (max-width:$mobileSmall) {
+         align-self: center;
+      }
+
+      img {
+         transition: all 0.3s ease 0s;
+      }
+   }
+
+   // .primary-card-gorizontal__body
+   &__body {
+      width: 100%;
+      display: flex;
+      gap: rem(15);
+      flex-direction: column;
+      padding-bottom: rem(5);
+   }
+
+   // .primary-card-gorizontal__info
+   &__info {
+      flex: 1 1 auto;
+      &:not(:last-child) {
+         margin-bottom: rem(10);
+      }
+   }
+
+   // .primary-card-gorizontal__title
+   &__title {
+      font-weight: 700;
+      font-size: rem(18);
+      line-height: math.div(18, 16);
+
+      &:not(:last-child) {
+         margin-bottom: rem(10);
+      }
+
+      @media (max-width:$mobileSmall) {
+         text-align: center;
+      }
+   }
+
+   // .primary-card-gorizontal__price
+   &__price {   
+      @media (max-width:$mobileSmall) {
+         text-align: center;
+      }
+   }
+
+   // .primary-card-gorizontal__price-value
+   &__price-value {}
+
+   // .primary-card__price-currency
+   &__price-currency {
+      padding-left: rem(7);
+   }
+
+
+   // .primary-card-gorizontal__no-photo
+   &__no-photo {
+      display: flex;
+      position: relative;
+      border-radius: rem(10);
+      background-color: #EFF0F2;
+      align-self: flex-start;
+      padding-left: rem(100);
+      padding-top: rem(100);
+
+      @media (max-width:$mobileSmall) {
+         align-self: center;
+      }
+
+      &>img {
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         color: #808080;
+         transform: translate(-50%, -50%);
+      }
+   }   
+   
+   // .primary-card-gorizontal__bottom
+   &__bottom {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: rem(10);
+      width: 100%;
+      @media (max-width:$mobileSmall) {
+         flex-direction: column;
+         
+      }
+   }
+
+   // .primary-card-gorizontal__quantity
+   &__quantity {}
+
+   // .primary-card-gorizontal__remove
+   &__remove {}
+
+   // .primary-card-gorizontal__remove-btn
+   &__remove-btn {
+      padding: rem(7) rem(10);
+      background-color: $accentColorRed;
+      color: #fff;
+      line-height: 1;
+      border-radius: rem(7);
+      transition: background-color 0.3s ease 0s;
+      @media (any-hover: hover){
+         &:hover{
+            background-color: $accentColorBlue;
+         }
+      }
+   }
+}
+
+//========================================================================================================================================================
+//<QUANTITY>
+// Снипет (HTML): qa
+.quantity {
+   width: 90px;
+   height: 30px;
+   display: flex;
+   border-radius: rem(10);
+   overflow: hidden;
+
+   // .quantity__button
+   &__button {
+      background-color: $accentColorBlue;
+      flex: 0 0 30px;
+      position: relative;
+      cursor: pointer;
+
+      &::before,
+      &::after {
+         content: "";
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transition: all 0.3s ease 0s;
+         margin: 0px 0px 0px -4.5px;
+         background-color: #fff;
+         width: 9px;
+         height: 1px;
+      }
+
+      @media (any-hover: hover) {
+         &:hover {
+            background-color: $accentColorRed;
+         }
+      }
+
+      // .quantity__button_plus
+      &_plus {
+         &::before {
+            transform: rotate(-90deg);
+         }
+      }
+
+      // .quantity__button_minus
+      &_minus {}
+   }
+
+   // .quantity__input
+   &__input {
+      flex: 1 1 auto;
+
+      input {
+         height: 100%;
+         color: #000;
+         font-size: 12px;
+         width: 100%;
+         text-align: center;
+      }
+   }
+}
+
+//========================================================================================================================================================
+.page404 {
+   display: flex;
+   align-items: center;
+
+   // .page404__container
+   &__container {
+      padding: rem(15);
+
+      @media (min-width:$mobile) {
+         display: grid;
+         grid-template-columns: percent(320, 1440) 1fr;
+         column-gap: rem(30);
+      }
+   }
+
+   // .page404__code
+   &__code {
+      font-weight: 700;
+      line-height: 1;
+      align-self: center;
+      @include adaptiveValue("font-size", 100, 50);
+      color: $accentColorRed;
+      line-height: 1;
+
+      @media (max-width:$mobile) {
+         &:not(:last-child) {
+            margin-bottom: rem(20);
+         }
+      }
+   }
+
+   // .page404__message
+   &__message {
+      display: flex;
+      flex-direction: column;
+      @include adaptiveValue("font-size", 20, 18);
+   }
+
+   // .page404__text
+   &__text {
+      font-weight: 700;
+      line-height: math.div(22, 20);
+
+      &:not(:last-child) {
+         margin-bottom: rem(40);
+      }
+   }
+
+   // .page404__btn
+   &__btn {
+      align-self: flex-start;
+   }
+}
