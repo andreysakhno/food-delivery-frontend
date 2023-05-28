@@ -17,7 +17,7 @@ export function initCart() {
    const cart = new Cart();
    
    if (Object.keys(cart.products).length === 0) {
-      orderContainer.textContent = "Корзина пуста";
+      orderContainer.textContent = "Корзина порожня";
       totalSum.textContent = (0).toFixed(2);
    } else {
       for (const key in cart.products) {
@@ -39,7 +39,7 @@ export function initCart() {
          totalSum.textContent = cart.getTotalSum().toFixed(2);
          cartIcon.textContent = cartIcon.textContent - 1;
          if (orderContainer.childNodes.length === 0) {
-            orderContainer.textContent = "Корзина пуста";
+            orderContainer.textContent = "Корзина порожня";
             cartIcon.textContent = "";
          }
       }
