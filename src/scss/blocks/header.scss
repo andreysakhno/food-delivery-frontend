@@ -59,6 +59,9 @@
 				color: $accentColorRed;
 			}
 		}
+		&.active {
+			color: $accentColorRed;
+		}
 	}
 	// .header__menu
 	&__menu {}

@@ -6,6 +6,11 @@ export async function getData(endpoint, params = {}) {
    if (params.hasOwnProperty("shopIds")) {
       url.searchParams.append("shopIds", params.shopIds.toString());
    }
+
+   if (params.hasOwnProperty("email") && params.hasOwnProperty("phone")) {
+      url.searchParams.append("email", params.email);
+      url.searchParams.append("phone", params.phone);
+   }
    
    try {       
       const response = await fetch(url);

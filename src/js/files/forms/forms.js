@@ -167,7 +167,7 @@ export let formValidate = {
 		}, 0);
 	},
 	emailTest(formRequiredItem) {
-		return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(formRequiredItem.value);
+		return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(formRequiredItem.value.trim());
 	}
 }
 /* Отправка форм */

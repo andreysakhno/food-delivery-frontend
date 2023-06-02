@@ -44,11 +44,19 @@ export function renderPicture(object, selector) {
    return productImageDiv;
 }
 
-export function renderPriceInfo(price, selector) {
+export function renderPriceInfo(price, selector, title = null) {
    // <div class="selector__price"></div>
    const divCardPrice = document.createElement("div");
    divCardPrice.classList = `${selector}__price`;
 
+    // <span class="selector__price-value">125.00</span>
+   if (title) {
+      const spanPriceTitle = document.createElement("span");
+      spanPriceTitle.classList = `${selector}__price-title`;
+      spanPriceTitle.textContent = `${title}:`;
+      divCardPrice.append(spanPriceTitle);
+   } 
+   
    // <span class="selector__price-value">125.00</span>
    const spanPriceValue = document.createElement("span");
    spanPriceValue.classList = `${selector}__price-value`;
@@ -62,3 +70,26 @@ export function renderPriceInfo(price, selector) {
    divCardPrice.append(spanPriceCurrency);
    return divCardPrice;
 }
+/*
+<li class="orders__client-info-item">
+   <div class="orders__client-info-lable">Ім'я:</div>
+   <div class="orders__client-info-value">Sakhno</div>
+</li>;
+*/
+export function renderClientInfo(lable, value) {
+   const li = document.createElement("li");
+   li.classList = "orders__client-info-item";
+
+   const divLable = document.createElement("div");
+   divLable.classList = "orders__client-info-lable";
+   divLable.textContent = `${lable}:`;
+   li.append(divLable);
+
+   const divValue = document.createElement("div");
+   divValue.classList = "orders__client-info-value";
+   divValue.textContent = `${value}:`;
+   li.append(divValue);
+
+   return li;
+}
+

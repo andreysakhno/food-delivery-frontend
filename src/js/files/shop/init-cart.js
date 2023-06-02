@@ -67,7 +67,7 @@ export function initCart() {
          cart.clear();
          orderContainer.textContent = "Корзина пуста";
          cartIcon.textContent = "";
-         postData("order", requestData).then(() => {
+         postData("orders", requestData).then(() => {
             FlashMessage.success("Замовлення відправлено!!!");
          });
       }      

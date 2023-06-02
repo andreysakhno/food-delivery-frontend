@@ -1,0 +1,161 @@
+.history {
+   // .history__main
+   &__main {}
+}
+
+.history-main {
+   // .history-main__container
+   &__container {
+      display: grid;
+      grid-template-columns: 1fr;
+      @include adaptiveValue("gap", 25, 20);
+   }
+
+   // .history-main__search
+   &__search {}
+
+   // .history-main__orders
+   &__orders {}
+}
+
+.form-search {
+   border-radius: rem(20);
+   background-color: $bgColorBlue;
+   @include adaptiveValue("padding-top", 20, 18);
+   @include adaptiveValue("padding-bottom", 20, 18);
+   @include adaptiveValue("padding-left", 15, 10);
+   @include adaptiveValue("padding-right", 15, 10);
+   @include adaptiveValue("font-size", 18, 16);
+   line-height: math.div(18, 16);
+   // .form-search__inputs
+   &__inputs {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      
+   }
+
+   // .form-search__item
+   &__item {            
+      width: 50%;
+      @include adaptiveValue("margin-bottom", 24, 20);
+      @media (max-width:$tablet){
+         width: 100%;
+      }
+   }
+
+   // .form-search__label
+   &__label {
+      font-weight: 700;
+      &:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 10, 7);
+      }      
+   }
+
+   // .form-search__input
+   &__input {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #C4C4C4;
+      border-radius: rem(7);
+      @include adaptiveValue("font-size", 20, 18);
+      line-height: math.div(20, 18);
+      padding: rem(10) rem(15) rem(10) rem(15);
+      &::placeholder {
+         color: rgba(74, 74, 74, 0.5);
+         @include adaptiveValue("font-size", 20, 18);
+         line-height: math.div(20, 18); 
+      }
+      &:focus {
+         outline: none;
+         &::placeholder {
+            color: rgba(74, 74, 74, 1);
+         }
+      }
+   }
+}
+
+.orders {  
+
+   // .orders__item 
+   &__item {
+      border-radius: rem(20);
+      background-color: $bgColorGrey;
+      @include adaptiveValue("padding-top", 25, 20);
+      @include adaptiveValue("padding-bottom", 25, 20);
+      @include adaptiveValue("padding-left", 20, 18);
+      @include adaptiveValue("padding-right", 20, 18);
+      @include adaptiveValue("font-size", 18, 16);
+      &:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 25, 20);
+      }
+   }
+
+   // .orders__info
+   &__info {
+      display: flex;
+      justify-content: space-between;
+      @include adaptiveValue("gap", 20, 15);
+      &:not(:last-child) {
+         @include adaptiveValue("margin-bottom", 20, 15);         
+      }
+      @media (max-width:$mobile){
+         flex-direction: column; 
+      }
+   }
+
+   // .orders__client-info
+   &__client-info {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      @include adaptiveValue("gap", 15, 10);      
+   }      
+   
+   // .orders__client-info-item
+   &__client-info-item {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);      
+   }
+
+   // .orders__client-info-lable
+   &__client-info-lable {
+      font-weight: 700;
+   }
+
+   // .orders__client-info-value
+   &__client-info-value {}
+
+   // .orders__status
+   &__status {}
+   
+   // .orders__status-lable   
+   &__status-lable {
+      padding: rem(5) rem(10);
+      border-radius: rem(5);
+      font-size: rem(14);
+      &.done {
+         background-color: green;
+         color: #fff;
+      }
+      &.process {
+         background-color: orange;
+      }
+   }   
+
+   // .orders__products-list
+   &__products-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+      gap: rem(10);
+   }
+
+   // .orders__product
+   &__product {
+      border: 1px solid #636363;
+      border-radius: rem(10);
+      padding: rem(7);
+   }
+}
+
+

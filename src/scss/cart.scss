@@ -7,8 +7,7 @@
    // .cart-main__container
    &__container {
       display: grid;
-      grid-template-columns: 1fr;
-      row-gap: rem(60);
+      grid-template-columns: 1fr;      
       @include adaptiveValue("gap", 25, 20);
    
       @media (min-width:$tablet) {
@@ -114,7 +113,7 @@
    @include adaptiveValue("padding-bottom", 25, 20);
    @include adaptiveValue("padding-left", 20, 18);
    @include adaptiveValue("padding-right", 20, 18);
-   @include adaptiveValue("font-size", 18, 16);
+   @include adaptiveValue("font-size", 18, 16);  
    // .form-order__title
    &__title {
       font-weight: 700;
@@ -129,7 +128,11 @@
    &__list {}
 
    // .form-order__item {}
-   &__item {}
+   &__item {
+      &:not(:last-child) {
+            @include adaptiveValue("margin-bottom", 25, 20);
+      }
+   }
 }
 
 .form-submit {
