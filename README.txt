@@ -16,6 +16,9 @@ GET https://static.welesgard.com/delivery/frontend/web/api/foods
 POST https://static.welesgard.com/delivery/frontend/web/api/orders
 
 2. FRONTEND частина написана на HTML, SCSS, JS (без використання фрейморків). Сборка проекту: GULP + WEBPACK
+Функціонал магазина знаходиться в src/js/files/shop
+В src/js/files/shop знаходяться класси Фільтри (Ресторани), Продукти, Корзина
+
 Для встановлення FRONTEND необхідно:
 - Клонувати цей репозиторій git clone https://github.com/andreysakhno/food-delivery-frontend.git
 - Якщо ви до цього моменту не користувалися збирачем GULP, введіть у термінал команду npm i gulp-cli -g це встановить GULP в систему глобально. Після встановлення GULP введіть npm i
