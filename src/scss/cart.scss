@@ -99,6 +99,17 @@
             color: rgba(74, 74, 74, 1);
          }
       }
+   }     
+   // .form-personal__map-container
+   &__map-container {
+      display: flex;
+      height: 500px;
+      width: 100%;
+   }
+
+   // .form-personal__map
+   &__map {
+      width: 100%;
    }
 }
 

@@ -3,7 +3,7 @@
 @@include('html/_head.htm',{
 	"title":"Замовлення доставки їжі"
 })
-<body>
+<body>	
 	<div class="wrapper">
 		@@include('html/_header.htm', {
 			"shop": "",
@@ -38,7 +38,10 @@
 							<div class="form-personal__item">
 								<label for="adress" class="form-personal__label">Адреса</label>
 								<input class="form-personal__input" autocomplete="off" type="text" name="form[adress]" id="adress" data-validate data-required data-error="Заповніть обов’язкове поле" placeholder="Введіть вашу адресу" >
-							</div>
+								<div class="form-personal__map-container">
+									<div class="form-personal__map" id="map"></div>
+								</div>
+							</div>							
 						</div>
 						
 					</div>
@@ -63,6 +66,6 @@
 		</main>
 		@@include('html/_footer.htm',{})
 	</div>
-	@@include('html/_js.htm',{})
-</body>
+	@@include('html/_js.htm',{})	
+	</body>
 </html>

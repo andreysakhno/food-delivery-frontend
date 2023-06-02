@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Address Selection</title>
+   <style>   
+
+      .sb-title {
+         position: relative;
+         top: -12px;
+         font-family: Roboto, sans-serif;
+         font-weight: 500;
+      }
+
+      .sb-title-icon {
+         position: relative;
+         top: -5px;
+      }
+
+      .card-container {
+         display: flex;
+         height: 500px;
+         width: 600px;
+      }
+
+      .panel {
+         background: white;
+         width: 300px;
+         padding: 20px;
+         display: flex;
+         flex-direction: column;
+         justify-content: space-around;
+      }
+
+      .half-input-container {
+         display: flex;
+         justify-content: space-between;
+      }
+
+      .half-input {
+         max-width: 120px;
+      }
+
+      .map {
+         width: 300px;
+      }
+
+      h2 {
+         margin: 0;
+         font-family: Roboto, sans-serif;
+      }
+
+      input {
+         height: 30px;
+      }
+
+      input {
+         border: 0;
+         border-bottom: 1px solid black;
+         font-size: 14px;
+         font-family: Roboto, sans-serif;
+         font-style: normal;
+         font-weight: normal;
+      }
+
+      input:focus::placeholder {
+         color: white;
+      }
+   </style>
+   <script>
+      "use strict";
+
+      function initMap() {
+         const autocompleteInput = document.getElementById('location-input');
+         const mapElement = document.getElementById("gmp-map");
+
+         const CONFIGURATION = {
+            "ctaTitle": "Checkout",
+            "mapOptions": { "center": { "lat": 50.44813845420719, "lng": 30.523545411355187 }, "fullscreenControl": true, "mapTypeControl": false, "streetViewControl": true, "zoom": 11, "zoomControl": true, "maxZoom": 22, "mapId": "" },
+            "mapsApiKey": "AIzaSyBgqOn618wGMaPpY2uZC3ODrMuUQ2he9R8",
+            "capabilities": { "addressAutocompleteControl": true, "mapDisplayControl": true, "ctaControl": false }
+         };
+
+         const map = new google.maps.Map(mapElement, {
+            zoom: CONFIGURATION.mapOptions.zoom,
+            center: { lat: CONFIGURATION.mapOptions.center.lat, lng: CONFIGURATION.mapOptions.center.lng },
+            mapTypeControl: false,
+            fullscreenControl: CONFIGURATION.mapOptions.fullscreenControl,
+            zoomControl: CONFIGURATION.mapOptions.zoomControl,
+            streetViewControl: CONFIGURATION.mapOptions.streetViewControl
+         });
+
+         const marker = new google.maps.Marker({ map: map, draggable: false });
+      
+         const geocoder = new google.maps.Geocoder();
+
+         const autocomplete = new google.maps.places.Autocomplete(autocompleteInput, {});
+
+         autocomplete.addListener('place_changed', function () {
+            marker.setVisible(false);
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {               
+               window.alert('No details available for input: \'' + place.name + '\'');
+               return;
+            }
+            renderAddress(place);
+         });
+
+         google.maps.event.addListener(map, 'click', function (event) {
+            marker.setVisible(false);
+            const location = event.latLng;
+            geocoder.geocode({
+               'latLng': location
+            }, function (results, status) {
+               if (status == google.maps.GeocoderStatus.OK) {
+                  if (results[0]) {
+                     const place = results[0].formatted_address;
+                     fillAddressField(place, location);
+                  }
+               }
+            });
+         });
+
+         function fillAddressField(place, location) {
+            map.setCenter(location);           
+            marker.setPosition(location);
+            marker.setVisible(true);
+            autocompleteInput.value = place;
+         }
+
+         function renderAddress(place) {
+            map.setCenter(place.geometry.location);
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+         }
+      }
+   </script>
+</head>
+
+<body>
+   <div class="card-container">
+      <div class="panel">         
+         <input type="text" placeholder="Address" id="location-input" />
+      </div>
+      <div class="map" id="gmp-map"></div>
+   </div>
+   @@include('html/_js.htm',{})
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgqOn618wGMaPpY2uZC3ODrMuUQ2he9R8&libraries=places&callback=initMap&solution_channel=GMP_QB_addressselection_v1_cAB" async defer></script>
+</body>
+
+</html>

@@ -6,6 +6,7 @@ export class Product {
       this.id = product.id;
       this.shopId = product.shop?.id;
       this.shopTitle = product.shop?.title;
+      this.shopCoords = product.shop?.coords;
       this.title = product.title;
       this.price = product.price.toFixed(2);      
       this.src = product.photo?.src;

@@ -2,75 +2,80 @@ import { Cart } from "./classes/Cart.js";
 import { renderPicture, renderPriceInfo } from "./functions.js";
 import { postData } from "./api-request.js";
 import { FlashMessage } from "./classes/FlashMessage.js";
+import { Map } from "./classes/Map.js";
 
 export function initCart() { 
    const orderContainer = document.querySelector(".form-order__list"); 
    const totalSum = document.querySelector(".form-submit_sum-value");
    const cartIcon = document.querySelector(".header__cart");
-
-   // Відображаємо число товарів в корзині
-   if (localStorage.getItem("cart") !== null) {
-      const productsInCart = JSON.parse(localStorage.getItem("cart"));
-      cartIcon.textContent = productsInCart.length;
-   }
-
-   const cart = new Cart();
+   const adressInput = document.getElementById("adress");
+   const mapContainer = document.getElementById("map");
    
-   if (Object.keys(cart.products).length === 0) {
-      orderContainer.textContent = "Корзина порожня";
-      totalSum.textContent = (0).toFixed(2);
-   } else {
-      for (const key in cart.products) {
-         orderContainer.append(renderProduct(cart.products[key]));
-         totalSum.textContent = cart.getTotalSum().toFixed(2);
-      }
-   }
-
-   orderContainer.addEventListener("click", (e) => {
-      const el = e.target;
-      const cardClass = ".primary-card-gorizontal";      
-      const closestCard = el.closest(cardClass);
-      const productId = +closestCard.dataset.productId;
-      const priceValue = closestCard.querySelectorAll(cardClass + "__price-value")[1];
-      
-      if (el.closest(cardClass + "__remove-btn")) {
-         cart.remove(productId);
-         closestCard.remove();
-         totalSum.textContent = cart.getTotalSum().toFixed(2);
-         cartIcon.textContent = cartIcon.textContent - 1;
-         if (orderContainer.childNodes.length === 0) {
-            orderContainer.textContent = "Корзина порожня";
-            cartIcon.textContent = "";
+   
+   const map = Map.initialize(mapContainer, adressInput).then((map) => {
+      const cart = new Cart();
+   
+      if (Object.keys(cart.products).length === 0) {
+         orderContainer.textContent = "Корзина порожня";
+         totalSum.textContent = (0).toFixed(2);
+         cartIcon.textContent = "";
+      } else {         
+         cartIcon.textContent = cart.products.length;
+         map.addMarkers( cart.getShops() );
+         for (const key in cart.products) {
+            orderContainer.append(renderProduct(cart.products[key]));
+            totalSum.textContent = cart.getTotalSum().toFixed(2);
          }
       }
-      if (el.closest(".quantity__button_plus")) {
-         cart.increaseQuantiti(productId);         
-         priceValue.textContent = cart.getItemSum(productId).toFixed(2);
-         totalSum.textContent = cart.getTotalSum().toFixed(2);
-      }
-      if (el.closest(".quantity__button_minus")) {
-         cart.decreaseQuantity(productId);         
-         priceValue.textContent = cart.getItemSum(productId).toFixed(2);
-         totalSum.textContent = cart.getTotalSum().toFixed(2);
-      }
-   });
-   // Після валідації форми генерується подія formSent. В цьому місці ми її перехоплюємо
-   document.addEventListener("formSent", (e) => {
-      if (Object.keys(cart.products).length !== 0) { 
-         const requestData = {
-            name: document.getElementById("name").value,
-            email: document.getElementById("email").value,
-            phone: document.getElementById("phone").value,
-            adress: document.getElementById("adress").value,
-            products: cart.products,
-         };
-         cart.clear();
-         orderContainer.textContent = "Корзина пуста";
-         cartIcon.textContent = "";
-         postData("orders", requestData).then(() => {
-            FlashMessage.success("Замовлення відправлено!!!");
-         });
-      }      
+
+      orderContainer.addEventListener("click", (e) => {
+         const el = e.target;
+         const cardClass = ".primary-card-gorizontal";      
+         const closestCard = el.closest(cardClass);
+         const productId = +closestCard.dataset.productId;
+         const priceValue = closestCard.querySelectorAll(cardClass + "__price-value")[1];
+         
+         if (el.closest(cardClass + "__remove-btn")) {
+            map.removeMarkers();
+            cart.remove(productId);
+            map.addMarkers(cart.getShops());
+            closestCard.remove();
+            totalSum.textContent = cart.getTotalSum().toFixed(2);
+            cartIcon.textContent = cartIcon.textContent - 1;
+            if (orderContainer.childNodes.length === 0) {
+               orderContainer.textContent = "Корзина порожня";
+               cartIcon.textContent = "";
+            }
+         }
+         if (el.closest(".quantity__button_plus")) {
+            cart.increaseQuantiti(productId);         
+            priceValue.textContent = cart.getItemSum(productId).toFixed(2);
+            totalSum.textContent = cart.getTotalSum().toFixed(2);
+         }
+         if (el.closest(".quantity__button_minus")) {
+            cart.decreaseQuantity(productId);         
+            priceValue.textContent = cart.getItemSum(productId).toFixed(2);
+            totalSum.textContent = cart.getTotalSum().toFixed(2);
+         }
+      });
+      // Після валідації форми генерується подія formSent. В цьому місці ми її перехоплюємо
+      document.addEventListener("formSent", (e) => {
+         if (Object.keys(cart.products).length !== 0) { 
+            const requestData = {
+               name: document.getElementById("name").value,
+               email: document.getElementById("email").value,
+               phone: document.getElementById("phone").value,
+               adress: document.getElementById("adress").value,
+               products: cart.products,
+            };
+            cart.clear();
+            orderContainer.textContent = "Корзина пуста";
+            cartIcon.textContent = "";
+            postData("orders", requestData).then(() => {
+               FlashMessage.success("Замовлення відправлено!!!");
+            });
+         }      
+      });
    });
 }
 

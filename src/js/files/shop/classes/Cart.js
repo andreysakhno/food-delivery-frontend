@@ -8,15 +8,14 @@ export class Cart {
 		} else {
 			this.products = {};
 		}
-	}	
+	}
 
 	remove(uniqueId) {
 		const product_index = this._findIndexOf(uniqueId);
 		if (product_index !== -1) {
 			this.products.splice(product_index, 1);
 			this._save();
-		}      
-		
+		}     
 	}
 
 	increaseQuantiti (uniqueId) {
@@ -50,6 +49,20 @@ export class Cart {
 
 	clear() {
 		localStorage.removeItem('cart');
+	}
+
+	getShops() {
+		const shops = [];
+		this.products.forEach((product) => {
+			let isIncludes = shops.some((item) => item.shopId === product.shopId);
+			if (isIncludes) return;
+			shops.push({
+				shopId: product.shopId,
+				shopTitle: product.shopTitle,
+				shopCoords: product.shopCoords,
+			});
+		});
+		return shops;
 	}
 
 	_save() {

@@ -35,7 +35,7 @@ export function initHistory() {
       if (e.key === "Enter") { 
          e.preventDefault();
          clearContainer(".orders");
-         emailInput.value = "";cl
+         emailInput.value = "";
 
          const element = e.target;
          const phone = element.value.trim();          
