@@ -2,7 +2,7 @@ import { Cart } from "./classes/Cart.js";
 import { renderPicture, renderPriceInfo } from "./functions.js";
 import { postData } from "./api-request.js";
 import { FlashMessage } from "./classes/FlashMessage.js";
-import { Map } from "./classes/Map.js";
+import { GoogleMap } from "./classes/Map.js";
 
 export function initCart() { 
    const orderContainer = document.querySelector(".form-order__list"); 
@@ -12,20 +12,25 @@ export function initCart() {
    const mapContainer = document.getElementById("map");
    
    
-   const map = Map.initialize(mapContainer, adressInput).then((map) => {
+   const map = GoogleMap.initialize(mapContainer, adressInput).then((map) => {
       const cart = new Cart();
-   
+      
+      // Якщо корзина порожня очищаємо інформацію, інакше додаємо
       if (Object.keys(cart.products).length === 0) {
          orderContainer.textContent = "Корзина порожня";
          totalSum.textContent = (0).toFixed(2);
          cartIcon.textContent = "";
-      } else {         
+      } else {       
+         // Кількість товарів біля іконки корзини
          cartIcon.textContent = cart.products.length;
-         map.addMarkers( cart.getShops() );
+         // Додаємо маркери магазинів на google карту
+         map.addMarkers(cart.getShops());
+         // Виводимо перелік замовленних продуктів
          for (const key in cart.products) {
-            orderContainer.append(renderProduct(cart.products[key]));
-            totalSum.textContent = cart.getTotalSum().toFixed(2);
+            orderContainer.append(renderProduct(cart.products[key]));            
          }
+         // Виводимо суму замовлених товарів
+         totalSum.textContent = cart.getTotalSum().toFixed(2);
       }
 
       orderContainer.addEventListener("click", (e) => {
@@ -34,11 +39,16 @@ export function initCart() {
          const closestCard = el.closest(cardClass);
          const productId = +closestCard.dataset.productId;
          const priceValue = closestCard.querySelectorAll(cardClass + "__price-value")[1];
-         
+         // Видалення продукту
          if (el.closest(cardClass + "__remove-btn")) {
+            cart.remove(productId); 
+            // Перемальовуємо карту
             map.removeMarkers();
-            cart.remove(productId);
             map.addMarkers(cart.getShops());
+            if (map.hasRoute) {
+               map.calculateAndDisplayRoute();
+            }             
+            // Видаляємо карточку товару з DOM
             closestCard.remove();
             totalSum.textContent = cart.getTotalSum().toFixed(2);
             cartIcon.textContent = cartIcon.textContent - 1;
@@ -47,11 +57,13 @@ export function initCart() {
                cartIcon.textContent = "";
             }
          }
+         // Збільшення кількості
          if (el.closest(".quantity__button_plus")) {
             cart.increaseQuantiti(productId);         
             priceValue.textContent = cart.getItemSum(productId).toFixed(2);
             totalSum.textContent = cart.getTotalSum().toFixed(2);
          }
+         // Зменшення кількості
          if (el.closest(".quantity__button_minus")) {
             cart.decreaseQuantity(productId);         
             priceValue.textContent = cart.getItemSum(productId).toFixed(2);
@@ -67,10 +79,13 @@ export function initCart() {
                phone: document.getElementById("phone").value,
                adress: document.getElementById("adress").value,
                products: cart.products,
-            };
+            };       
+            
             cart.clear();
             orderContainer.textContent = "Корзина пуста";
             cartIcon.textContent = "";
+            map.clearMap();
+
             postData("orders", requestData).then(() => {
                FlashMessage.success("Замовлення відправлено!!!");
             });
