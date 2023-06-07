@@ -1,4 +1,5 @@
 import { Loader } from 'google-maps';
+import { FlashMessage } from "./FlashMessage.js";
 
 export class GoogleMap {
 	#google;
@@ -25,7 +26,7 @@ export class GoogleMap {
 				maxZoom: 22,
 				mapId: "",
 			},
-			mapsApiKey: "",
+			mapsApiKey: "AIzaSyAOh0pu75uFzUHxNfikPcy4xwlnb5QTlTw",
 			capabilities: {
 				addressAutocompleteControl: true,
 				mapDisplayControl: true,
@@ -74,8 +75,8 @@ export class GoogleMap {
 	}
 
 	static async initialize(mapContainer, autocompleteInput) {
-		const options = { libraries: ["places"] };
-		const loader = new Loader(GoogleMap._CONFIGURATION.mapsApiKey, options);
+		const loaderOptions = { libraries: ["places"] };
+		const loader = new Loader(GoogleMap._CONFIGURATION.mapsApiKey, loaderOptions);
 
 		const google = await loader.load();
 		// Ініціалізуємо карту
@@ -90,30 +91,38 @@ export class GoogleMap {
 		const directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
 
 		return new GoogleMap(
-      google,
-      map,
-      marker,
-      autocomplete,
-      directionsService,
-      directionsRenderer,
-      mapContainer,
-      autocompleteInput
-    );
+			google,
+			map,
+			marker,
+			autocomplete,
+			directionsService,
+			directionsRenderer,
+			mapContainer,
+			autocompleteInput
+		);
 	}	
 
 	async calculateAndDisplayRoute() {
+		
 		if (this.#markers.length === 0) {			
 			this._clearMap();
 			return;
 		}
-		let maxDistanceIndex = 0;
-		// Шукаємо індекс маркера в массиві markers з айбільш віддаленого від головного маркера
-		await this._getDistances().then((distances) => {			
-			if (!Array.isArray(distances) || distances.length === 0) return;	
-			const maxDistance = Math.max(...distances);
-			maxDistanceIndex = distances.indexOf(maxDistance);		
-		});
 		
+		// Шукаємо індекс маркера в массиві markers найбільш віддаленого від головного маркера		
+		const maxDistanceIndex = await this._getDistances().then((distances) => {	
+			if (!Array.isArray(distances) || distances.length === 0) return -1;	
+			const maxDistance = Math.max(...distances);
+			return  distances.indexOf(maxDistance);		
+		});
+
+		console.log(maxDistanceIndex);
+		
+		if (maxDistanceIndex === -1) {
+			FlashMessage.warning("Неможливо прокласти маршрут! Ви занадто далеко знаходитесь!");
+			return;
+		}
+
 		// Заповнюємо масив way points. Кординати всіх маркерів, крім найвіддаленішого. Від найвіддаленішого ми почнемо шлях
 		const waypts = [];
 		this.#markers.forEach((marker, index) => { 
@@ -156,40 +165,40 @@ export class GoogleMap {
 					});
 					this._renderRouteInfo(distance, duration);
 				} else {
-					window.alert("Directions request failed due to " + status);
+					FlashMessage.warning("Directions request failed due to " + status);
 				}
 			}			
-		);				
+		);		
+		
 	}
 
-	async _getDistances() {
-		try {
-			const requests = this.#markers.map((marker) => { 
-				return new Promise((resolve, reject) => {
-					this.#directionsService.route(
-						{
-							origin: this.#mainMarker.position,
-							destination: marker.position,
-							avoidTolls: false,
-							avoidHighways: false,
-							travelMode: google.maps.TravelMode.DRIVING,
-						},
-						(response, status) => {
-							if (status == google.maps.DirectionsStatus.OK) {									
-								resolve((response));
-							} else {
-								reject(status);
-							}
+	async _getDistances() {	
+		const requests =  this.#markers.map((marker) => {
+			return new Promise((resolve, reject) => {
+				this.#directionsService.route(
+					{
+						origin: this.#mainMarker.position,
+						destination: marker.position,
+						avoidTolls: false,
+						avoidHighways: false,
+						travelMode: google.maps.TravelMode.DRIVING,
+					},
+					(response, status) => {
+						if (status === google.maps.DirectionsStatus.OK) {							
+							resolve(response);
+						} else {
+							reject(status);
 						}
-					);
-				})
+					}
+				);
 			});
-			const responses = await Promise.all(requests);	
-			
-			return await Promise.all(responses.map((response) => {
-				return response.routes[0].legs[0].distance.value;				
-			}));
-			
+		});
+
+		try {			
+			const responses = await Promise.all(requests);			
+			return responses.map((response) => {
+				return response.routes[0].legs[0].distance.value;
+			});
 		} catch (error) {
 			console.log(error);
 		}
