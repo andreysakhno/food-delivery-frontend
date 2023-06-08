@@ -8,44 +8,61 @@ export function initHistory() {
    const phoneInput = document.getElementById("phone");
    const ordersContainer = document.querySelector(".orders");
 
+   function searchByEmail(input) {
+      clearContainer(".orders");
+      phoneInput.value = "";         
+      const email = input.value.trim();  
+      
+      if (formValidate.emailTest(input)) {        
+         formValidate.addError(input);
+         return;
+      } 
+
+      formValidate.removeError(input);
+      requestParams.email = email;
+      requestParams.phone = '';
+      getData('orders', requestParams).then((data) => {
+         data.forEach((item) => ordersContainer.append(renderOrder(item)));
+      });      
+
+   };
+
+   function searchByPhone(input) {
+      clearContainer(".orders");
+      emailInput.value = "";
+      const phone = input.value.trim();
+      if (phone) {
+         requestParams.email = "";
+         requestParams.phone = phone;
+         getData("orders", requestParams).then((data) => {
+            clearContainer(".orders");
+            data.forEach((item) => ordersContainer.append(renderOrder(item)));
+         });
+      }
+   };
+
    // Подія при вводі email
    emailInput.addEventListener("keypress", (e) => {      
       if (e.key === "Enter") { 
-         e.preventDefault();
-         clearContainer(".orders");
-         phoneInput.value = "";
-
-         const element = e.target;
-         const email = element.value.trim();          
-         if (formValidate.emailTest(element)) {
-            formValidate.addError(element);
-         } else {
-            formValidate.removeError(element);
-            requestParams.email = email;
-            requestParams.phone = '';
-            getData('orders', requestParams).then((data) => {
-               data.forEach((item) => ordersContainer.append(renderOrder(item)));
-            });
-         };
+         e.preventDefault();        
+         searchByEmail(e.target);
       }
+   });
+   emailInput.addEventListener("blur", (e) => {      
+      e.preventDefault();
+      searchByEmail(e.target);
    });
 
    // Подія при вводі телефону
    phoneInput.addEventListener("keypress", (e) => {      
       if (e.key === "Enter") { 
          e.preventDefault();
-         clearContainer(".orders");
-         emailInput.value = "";
-
-         const element = e.target;
-         const phone = element.value.trim();          
-         requestParams.email = '';
-         requestParams.phone = phone;
-         getData('orders', requestParams).then((data) => {
-            clearContainer(".orders");
-            data.forEach((item) => ordersContainer.append(renderOrder(item)));
-         });
+         searchByPhone(e.target); 
       }
+   });
+   phoneInput.addEventListener("blur", (e) => {
+      e.preventDefault();
+      searchByPhone(e.target);
    });
 }
 

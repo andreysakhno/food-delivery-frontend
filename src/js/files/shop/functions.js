@@ -87,7 +87,7 @@ export function renderClientInfo(lable, value) {
 
    const divValue = document.createElement("div");
    divValue.classList = "orders__client-info-value";
-   divValue.textContent = `${value}:`;
+   divValue.textContent = `${value}`;
    li.append(divValue);
 
    return li;
